@@ -20,23 +20,26 @@ dom::File::File(str_const_ref aFileName) :
     mOut    (aFileName)
 {}
 
-dom::File::File(str_only_val aFileName) :
-    mOut    (aFileName)
-{}
-
 dom::File::~File()
 {
     mOut.close();
 }
 
 void 
-dom::File::write(str_const_ref aMessage)
+dom::File::write(const std::vector<std::string>& aMessage)
 {
-    mOut << aMessage;
+    for(const auto& i : aMessage) mOut << i << mDelimiter;
+    mOut << '\n';
 }
 
 void
-dom::File::write(str_only_val aMessage)
+dom::File::setDelimiter(str_const_ref aDelimiter)
 {
-    write(aMessage);
+    mDelimiter = aDelimiter;
+}
+
+void
+dom::File::writeEndl()
+{
+    mOut << '\n';
 }

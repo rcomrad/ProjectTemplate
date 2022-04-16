@@ -36,7 +36,7 @@ makeWindowString
     str_ref aString
 )
 {
-    for (std_string_cell& i : aString)
+    for (char& i : aString)
     {
         if (i == '/') i = '\\';
     }

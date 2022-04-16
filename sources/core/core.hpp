@@ -1,12 +1,9 @@
 #ifndef CORE_HPP
 #define CORE_HPP
 
-#include <vector>
-#include <string>
-#include <sstream>
-
 #include "domain/dom_file_manager.hpp"
 #include "domain/dom_path.hpp"
+#include "domain/dom_pair.hpp"
 
 namespace proj
 {
@@ -19,7 +16,7 @@ namespace proj
         void run();
 
     private:
-        dom::File mFile;
+
     };
 }
 

@@ -2,6 +2,7 @@
 #define FILES_MANAGER_HPP
 
 #include <fstream>
+#include <vector>
 
 #include "main/flags.hpp"
 
@@ -17,14 +18,25 @@ namespace dom
     {
     public:
         File(str_const_ref aFileName);
-        File(str_only_val aFileName);
         ~File();
 
-        void write(str_const_ref aMessage);
-        void write(str_only_val aMessage);
+        void write(const std::vector<std::string>& aMessage);
+        template<typename... Args>
+        void write(Args... args)
+        {
+            (void) std::initializer_list<bool>
+            {
+                static_cast<bool>(mOut << args << mDelimiter)...
+            };
+            mOut << '\n';
+        }
+
+        void setDelimiter(str_const_ref aDelimiter);
+        void writeEndl();
 
     private:
         std::ofstream mOut;
+        str_val mDelimiter;
     };
 } // namespace dom
 

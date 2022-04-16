@@ -13,7 +13,6 @@
 
 typedef std::string			str_val;
 typedef std::string&		str_ref;
-typedef std::string&&		str_only_val;
 typedef const std::string&	str_const_ref;
 
 

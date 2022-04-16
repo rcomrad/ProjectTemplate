@@ -5,11 +5,7 @@ getMainPath() {
 #ifdef BILL_WINDOWS
     CHAR buffer[MAX_PATH] = { 0 };
     uint_8 size = GetModuleFileNameA(NULL, buffer, MAX_PATH);
-#ifdef TRUE_ONLY_WAY
     for (int i = 0; i < 2; ++i) while (buffer[--size] != L'\\');
-#else
-    for (int i = 0; i < 1; ++i) while (buffer[--size] != L'\\');
-#endif
     buffer[size + 1] = 0;
     //return std::string(buffer).substr(0, size + 1);
     return getString(buffer);

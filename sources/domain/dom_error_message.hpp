@@ -13,92 +13,108 @@
 #include "domain/dom_type.hpp"
 #include "domain/dom_string.hpp"
 
-/*
-\brief Write log information to output.
-\param aMessege Log messege.
-*/
-#define W_LOG(aMessege)                                 \
-    do {                                                \
-        std::cout <<aMessege << "\n";                   \
-    } while(0)
+// /*
+// \brief Write log information to output.
+// \param aMessege Log messege.
+// */
+// #define W_LOG(aMessege)                                 \
+//     do {                                                \
+//         std::cout <<aMessege << "\n";                   \
+//     } while(0)
 
-/*
-\brief Write array to log output.
-\param aMessege Aray for output.
-*/
-#define W_VECTOR_LOG(aMessege)                          \
-    do {                                                \
-        for(auto& i : aMessege)                         \
-            std::cout << i << "\n";                     \
-    } while (0)
+// /*
+// \brief Write array to log output.
+// \param aMessege Aray for output.
+// */
+// #define W_VECTOR_LOG(aMessege)                          \
+//     do {                                                \
+//         for(auto& i : aMessege)                         \
+//             std::cout << i << "\n";                     \
+//     } while (0)
 
-/*
-\brief Write array that contains pointers to log output.
-\param aMessege Aray for output.
-*/
-#define W_VECTOR_PTR_LOG(aMessege)                      \
-    do {                                                \
-        for(auto& i : aMessege)                         \
-            if (i != NULL)                              \
-                std::cout << i << "\n";                 \
-    } while (0)
+// /*
+// \brief Write array that contains pointers to log output.
+// \param aMessege Aray for output.
+// */
+// #define W_VECTOR_PTR_LOG(aMessege)                      \
+//     do {                                                \
+//         for(auto& i : aMessege)                         \
+//             if (i != NULL)                              \
+//                 std::cout << i << "\n";                 \
+//     } while (0)
 
-/*
-\brief Write empty line in log output.
-*/
-#define W_END_LOG                                       \
-    do {                                                \
-        std::cout << std::endl;                         \
-    } while (0)
+// /*
+// \brief Write empty line in log output.
+// */
+// #define W_END_LOG                                       \
+//     do {                                                \
+//         std::cout << std::endl;                         \
+//     } while (0)
 
-#ifdef  GOOD_DEBUG_ERRORS
-/*
-\brief Write error messege in log output with red text color.
-\param aNumber Error name.
-\param aMessege Errore messege.
-*/
-#define W_ERROR(aNumber, aMessege)                      \
-    do {                                                \
-        std::cout << std::string("\n\n\x1b[31m!!!!!!!!!"\
-            "ERROR HAS OCCURRED !!!!!!!!!\n"            \
-            "ERROR# " #aNumber "\n") +                  \
-            std::string(aMessege) +                     \
-            std::string("\x1b[0m\n\n\n\n")              \
-            << std::endl; exit(0);                      \
-    } while (0)
-#else
-/*
-\brief Write error messege in log output.
-\param aNumber Error name.
-\param aMessege Errore messege.
-*/
-#define W_ERROR(aNumber, aMessege)                      \
-    do {                                                \
-        std::cout << std::string("\n\n!!!!!!!!! "       \
-            "ERROR HAS OCCURRED !!!!!!!!!\n"            \
-            "ERROR# " #aNumber "\n") +                  \
-            std::string(aMessege) +                     \
-            std::string("\n\n\n\n")                     \
-            << std::endl; exit(0);                      \
-    } while (0)
-#endif // !GOOD_DEBUG_ERRORS
+// #ifdef  GOOD_DEBUG_ERRORS
+// /*
+// \brief Write error messege in log output with red text color.
+// \param aNumber Error name.
+// \param aMessege Errore messege.
+// */
+// #define W_ERROR(aNumber, aMessege)                      \
+//     do {                                                \
+//         std::cout << std::string("\n\n\x1b[31m!!!!!!!!!"\
+//             "ERROR HAS OCCURRED !!!!!!!!!\n"            \
+//             "ERROR# " #aNumber "\n") +                  \
+//             std::string(aMessege) +                     \
+//             std::string("\x1b[0m\n\n\n\n")              \
+//             << std::endl; exit(0);                      \
+//     } while (0)
+// #else
+// /*
+// \brief Write error messege in log output.
+// \param aNumber Error name.
+// \param aMessege Errore messege.
+// */
+// #define W_ERROR(aNumber, aMessege)                      \
+//     do {                                                \
+//         std::cout << std::string("\n\n!!!!!!!!! "       \
+//             "ERROR HAS OCCURRED !!!!!!!!!\n"            \
+//             "ERROR# " #aNumber "\n") +                  \
+//             std::string(aMessege) +                     \
+//             std::string("\n\n\n\n")                     \
+//             << std::endl; exit(0);                      \
+//     } while (0)
+// #endif // !GOOD_DEBUG_ERRORS
+
+template<typename... Args>
+void writeLog(, Args... args)
+{
+    (void)std::initializer_list<bool>
+    {
+        static_cast<bool>(cout << args << ";")...
+    };
+    cout << '\n';
+}
+
+
 
 #ifdef _DBG_
-#define WD_LOG(aMessege)            W_LOG(aMessege) 
-#define WD_END_LOG                  W_END_LOG 
-#define WD_ERROR(aNumber, aMessege) W_ERROR(aNumber, aMessege) 
+#define WD_LOG      W_LOG
+#define WD_END_LOG  W_END_LOG 
+#define WD_ERROR    W_ERROR
 #else
-#define WD_LOG(aMessege)            do {} while (0)
-#define WD_END_LOG                  do {} while (0)
-#define WD_ERROR(aNumber, aMessege) do {} while (0)
+#define WD_LOG      do {} while (0)
+#define WD_END_LOG  do {} while (0)
+#define WD_ERRO     do {} while (0)
 #endif // DEBUG
 
 #ifdef BILL_WINDOWS
+
+#include <windows.h>
+
 /*
 \brief Gets error of WinAPI.
 \return String with error messege.
 */
 str_val GetLastErrorAsString();
+
 #endif // !BILL_WINDOWS
 
 #endif // !ERRORS_HPP
