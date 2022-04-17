@@ -4,16 +4,16 @@
 #include <fstream>
 #include <vector>
 
-#include "main/flags.hpp"
+#include "domain/dom_flags.hpp"
 
 #include "domain/dom_type.hpp"
 #include "domain/dom_string.hpp"
 #include "domain/dom_error_message.hpp"
 
-void copyFile(str_const_ref aFromFileName, str_const_ref aToFileName);
-
 namespace dom
 {
+    void copyFile(str_const_ref aFromFileName, str_const_ref aToFileName);
+
     class File
     {
     public:
@@ -33,6 +33,8 @@ namespace dom
 
         void setDelimiter(str_const_ref aDelimiter);
         void writeEndl();
+
+        void close();
 
     private:
         std::ofstream mOut;

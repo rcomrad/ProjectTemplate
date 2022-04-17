@@ -1,19 +1,36 @@
 #include "domain/dom_file_manager.hpp"
 
 void
-copyFile
+dom::copyFile
 (
     str_const_ref aFromFileName,
     str_const_ref aToFileName
 )
 {
-    WD_LOG("Copying file\nFrom : " << aFromFileName);
-    WD_LOG("To   : " << aToFileName);
+    START_LOG_BLOCK("Copying file");
+    WRITE_LOG("From : ", aFromFileName);
+    WRITE_LOG("To   : ", aToFileName);
+
     std::ifstream fromFile(aFromFileName);
     std::ofstream toFile(aToFileName);
+
+    if (!fromFile.is_open()) 
+    {
+        WRITE_ERROR("DOMAIN", "FILE_MANAGER", "FM#_0", "CANT_OPEN_FILE_FOR_READING", aFromFileName);
+    }
+    if (!toFile.is_open()) 
+    {
+        WRITE_ERROR("DOMAIN", "FILE_MANAGER", "FM#_0", "CANT_OPEN_FILE_FOR_WRITING", aToFileName);
+    }
+
     std::string s;
-    while (std::getline(fromFile, s, '\0')) toFile << s << '\n';
-    WD_END_LOG;
+    while (std::getline(fromFile, s, '\0')) 
+    {
+        toFile << s << '\n';
+    }
+
+    END_LOG_BLOCK();
+    WRITE_LOG_ENDL;
 }
 
 dom::File::File(str_const_ref aFileName) :
@@ -42,4 +59,10 @@ void
 dom::File::writeEndl()
 {
     mOut << '\n';
+}
+
+void
+dom::File::close()
+{
+    mOut.close();
 }

@@ -5,16 +5,11 @@
 
 #include <string>
 
-#include "main/flags.hpp"
-
-//typedef std::string         std_string;
-//typedef char                std_string_cell;
-//typedef std_string&			std_string_ref;
+#include "domain/dom_flags.hpp"
 
 typedef std::string			str_val;
 typedef std::string&		str_ref;
 typedef const std::string&	str_const_ref;
-
 
 #define newStrCopy(str) \
 std::strcpy(new char[str.size() + 1], str.c_str())

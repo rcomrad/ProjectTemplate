@@ -6,115 +6,114 @@
 //------------------------------------------------------------
 
 #include <iostream>
-#include <string>
 
-#include "main/flags.hpp"
-
+#include "domain/dom_flags.hpp"
 #include "domain/dom_type.hpp"
 #include "domain/dom_string.hpp"
+#include "domain/dom_path.hpp"
 
-// /*
-// \brief Write log information to output.
-// \param aMessege Log messege.
-// */
-// #define W_LOG(aMessege)                                 \
-//     do {                                                \
-//         std::cout <<aMessege << "\n";                   \
-//     } while(0)
+#ifdef BILL_WINDOWS
+#include <windows.h>
+#endif // !BILL_WINDOWS
 
-// /*
-// \brief Write array to log output.
-// \param aMessege Aray for output.
-// */
-// #define W_VECTOR_LOG(aMessege)                          \
-//     do {                                                \
-//         for(auto& i : aMessege)                         \
-//             std::cout << i << "\n";                     \
-//     } while (0)
-
-// /*
-// \brief Write array that contains pointers to log output.
-// \param aMessege Aray for output.
-// */
-// #define W_VECTOR_PTR_LOG(aMessege)                      \
-//     do {                                                \
-//         for(auto& i : aMessege)                         \
-//             if (i != NULL)                              \
-//                 std::cout << i << "\n";                 \
-//     } while (0)
-
-// /*
-// \brief Write empty line in log output.
-// */
-// #define W_END_LOG                                       \
-//     do {                                                \
-//         std::cout << std::endl;                         \
-//     } while (0)
-
-// #ifdef  GOOD_DEBUG_ERRORS
-// /*
-// \brief Write error messege in log output with red text color.
-// \param aNumber Error name.
-// \param aMessege Errore messege.
-// */
-// #define W_ERROR(aNumber, aMessege)                      \
-//     do {                                                \
-//         std::cout << std::string("\n\n\x1b[31m!!!!!!!!!"\
-//             "ERROR HAS OCCURRED !!!!!!!!!\n"            \
-//             "ERROR# " #aNumber "\n") +                  \
-//             std::string(aMessege) +                     \
-//             std::string("\x1b[0m\n\n\n\n")              \
-//             << std::endl; exit(0);                      \
-//     } while (0)
-// #else
-// /*
-// \brief Write error messege in log output.
-// \param aNumber Error name.
-// \param aMessege Errore messege.
-// */
-// #define W_ERROR(aNumber, aMessege)                      \
-//     do {                                                \
-//         std::cout << std::string("\n\n!!!!!!!!! "       \
-//             "ERROR HAS OCCURRED !!!!!!!!!\n"            \
-//             "ERROR# " #aNumber "\n") +                  \
-//             std::string(aMessege) +                     \
-//             std::string("\n\n\n\n")                     \
-//             << std::endl; exit(0);                      \
-//     } while (0)
-// #endif // !GOOD_DEBUG_ERRORS
-
-template<typename... Args>
-void writeLog(, Args... args)
+namespace dom
 {
-    (void)std::initializer_list<bool>
+    class ErrorMessages
     {
-        static_cast<bool>(cout << args << ";")...
+    public:
+        ErrorMessages();
+
+        template<typename... Args>
+        static void startLogBlock(Args... args)
+        {
+            for(sint_8 i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
+            ++mLogBlockCount;
+
+            (void)std::initializer_list<bool>
+            {
+                static_cast<bool>((*mLogStream) << args << ' ')...
+            };
+
+            (*mLogStream) << '\n';
+        }
+
+        template<typename... Args>
+        static void endLogBlock(Args... args)
+        {
+            for(sint_8 i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
+            --mLogBlockCount;
+
+            (void)std::initializer_list<bool>
+            {
+                static_cast<bool>((*mLogStream) << args << ' ')...
+            };
+            
+            (*mLogStream) << '\n';
+        }
+
+        template<typename... Args>
+        static void writeLog(Args... args)
+        {
+            for(sint_8 i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
+
+            (void)std::initializer_list<bool>
+            {
+                static_cast<bool>((*mLogStream) << args << ' ')...
+            };
+
+            (*mLogStream) << '\n';
+        }
+
+        template<typename... Args>
+        static void writeError(Args... args)
+        {
+            #ifdef ERRORS_TO_LOG_OUTPU
+                for(sint_8 i = 0; i < mLogBlockCount; ++i) (*mLogStream) << '\t';
+            #endif
+
+            (*mErrorStream) << "ERROR" << ' ';
+
+            (void)std::initializer_list<bool>
+            {
+                static_cast<bool>((*mErrorStream) << args << ' ')...
+            };
+
+            (*mErrorStream) << '\n';
+        }
+
+        static void writeLogEndl();
+
+        #ifdef BILL_WINDOWS
+        /*
+        \brief Gets error of WinAPI.
+        \return String with error messege.
+        */
+        str_val GetLastErrorAsString();
+        #endif // !BILL_WINDOWS
+
+    private:
+        static ErrorMessages mGreatCrutch;
+
+        static std::ostream* mLogStream;
+        static std::ostream* mErrorStream;
+
+        static sint_8 mLogBlockCount;
     };
-    cout << '\n';
 }
 
 
-
 #ifdef _DBG_
-#define WD_LOG      W_LOG
-#define WD_END_LOG  W_END_LOG 
-#define WD_ERROR    W_ERROR
+    #define START_LOG_BLOCK     dom::ErrorMessages::startLogBlock
+    #define END_LOG_BLOCK       dom::ErrorMessages::endLogBlock
+    #define WRITE_LOG           dom::ErrorMessages::writeLog
+    #define WRITE_LOG_ENDL      dom::ErrorMessages::writeLogEndl 
+    #define WRITE_ERROR         dom::ErrorMessages::writeError
 #else
-#define WD_LOG      do {} while (0)
-#define WD_END_LOG  do {} while (0)
-#define WD_ERRO     do {} while (0)
+    #define START_LOG_BLOCK
+    #define END_LOG_BLOCK
+    #define WRITE_LOG     
+    #define WRITE_LOG_ENDL 
+    #define WRITE_ERROR    
 #endif // DEBUG
-
-#ifdef BILL_WINDOWS
-
-#include <windows.h>
-
-/*
-\brief Gets error of WinAPI.
-\return String with error messege.
-*/
-str_val GetLastErrorAsString();
-
-#endif // !BILL_WINDOWS
 
 #endif // !ERRORS_HPP

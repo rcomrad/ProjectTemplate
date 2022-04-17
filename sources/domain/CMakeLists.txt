@@ -9,6 +9,8 @@ add_library(
     "dom_file_manager.hpp"
     "dom_file_manager.cpp"
 
+    "dom_flags.hpp"
+
     "dom_pair.hpp"
 
     "dom_path.hpp"
