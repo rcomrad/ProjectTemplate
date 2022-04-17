@@ -7,6 +7,8 @@
 
 #include "domain/dom_flags.hpp"
 
+using namespace std::literals;
+
 typedef std::string			str_val;
 typedef std::string&		str_ref;
 typedef const std::string&	str_const_ref;

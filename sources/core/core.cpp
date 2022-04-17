@@ -28,7 +28,6 @@ proj::Core::Core()
     mFile.write({"hello world3", "3"});
 
     mFile.close();
-    
     dom::copyFile(OUTPUT_PATH + "test.test", OUTPUT_PATH + "test2.test2");
 }
 

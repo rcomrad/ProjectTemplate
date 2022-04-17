@@ -29,7 +29,7 @@ dom::MainPath::getMainPath()
     }
     return str.substr(0, i + 2);
     //return str.substr(0, str.rfind('/'));
-#elif
+#else
     return "";
 #endif
 }
