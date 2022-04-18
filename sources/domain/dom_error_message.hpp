@@ -103,17 +103,17 @@ namespace dom
 
 
 #ifdef _DBG_
-    #define START_LOG_BLOCK     dom::ErrorMessages::startLogBlock
-    #define END_LOG_BLOCK       dom::ErrorMessages::endLogBlock
-    #define WRITE_LOG           dom::ErrorMessages::writeLog
-    #define WRITE_LOG_ENDL      dom::ErrorMessages::writeLogEndl 
-    #define WRITE_ERROR         dom::ErrorMessages::writeError
+    #define START_LOG_BLOCK(...)    dom::ErrorMessages::startLogBlock(__VA_ARGS__)
+    #define END_LOG_BLOCK(...)      dom::ErrorMessages::endLogBlock(__VA_ARGS__)
+    #define WRITE_LOG(...)          dom::ErrorMessages::writeLog(__VA_ARGS__)
+    #define WRITE_LOG_ENDL          dom::ErrorMessages::writeLogEndl
+    #define WRITE_ERROR(...)        dom::ErrorMessages::writeError(__VA_ARGS__)
 #else
-    #define START_LOG_BLOCK
-    #define END_LOG_BLOCK
-    #define WRITE_LOG     
-    #define WRITE_LOG_ENDL 
-    #define WRITE_ERROR    
+    #define START_LOG_BLOCK(...)    void(0)
+    #define END_LOG_BLOCK(...)      void(0)
+    #define WRITE_LOG(...)          void(0)
+    #define WRITE_LOG_ENDL          void(0) 
+    #define WRITE_ERROR(...)        void(0)    
 #endif // DEBUG
 
 #endif // !ERRORS_HPP
