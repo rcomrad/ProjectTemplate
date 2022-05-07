@@ -1,8 +1,6 @@
-cmake_minimum_required(VERSION 3.21)
-
 add_library(
     domain
-
+    SHARED
     "dom_error_message.hpp"
     "dom_error_message.cpp"
 
