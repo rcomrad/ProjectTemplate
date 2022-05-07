@@ -1,6 +1,6 @@
 add_library(
     domain
-    SHARED
+
     "dom_error_message.hpp"
     "dom_error_message.cpp"
 

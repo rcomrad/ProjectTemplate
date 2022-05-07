@@ -6,15 +6,10 @@ set(SFML_STATIC_LIBRARIES TRUE)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
-set(SFML_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libraries/SFML-2.5.1_W")
 set(SFML_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/libraries/SFML-2.5.1_W")
-set(SFML_DIR "${SFML_ROOT_DIR}/lib/cmake/SFML")
 find_package(SFML 2.5 COMPONENTS system window graphics audio main REQUIRED)
 include_directories("${SFML_ROOT_DIR}/include") 
 include_directories(PUBLIC ${SFML_INCUDE_PATH})
-
-set(SFML_FIND_PATH ${CMAKE_PREFIX_PATH})
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 
 add_executable(${PROJECT_NAME} "sources/main/main.cpp")
 
