@@ -1,17 +1,39 @@
-cmake_minimum_required(VERSION 3.21)
-project(ProjectTemplate VERSION 1.0)
+#--------------------------------------------------------------------------------
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+cmake_minimum_required(VERSION 3.21.3)
+project(KusManager VERSION 1.2)
 
-add_executable(${PROJECT_NAME} "sources/main/main.cpp")
+#--------------------------------------------------------------------------------
 
-add_subdirectory("sources")
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(Configuration "D")
+# Compile options
+if (MSVC_VERSION GREATER_EQUAL "1900")
+    set(OS BILL_WINDOWS)
+    add_compile_options("/std:c++latest")
+else()
+    set(OS LINUS_LINUX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wl,--no-as-needed -ldl")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG")
+endif()
 
-set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin/$<0:>)
+#  Code include
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts/cmake_scripts.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/libraries/libraries.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/sources/sources.cmake)
 
-set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
-set_target_properties(${PROJECT_NAME}  PROPERTIES SUFFIX "_V${CMAKE_PROJECT_VERSION}_${Configuration}.exe")
+get_libraries(SOURCES_LIST ${CMAKE_CURRENT_SOURCE_DIR})
+get_sources(SOURCES_LIST ${CMAKE_CURRENT_SOURCE_DIR})
 
-#target_compile_definitions(${PROJECT_NAME} PROJECT_PATH = "${CMAKE_CURRENT_SOURCE_DIR}")
+add_executable(${PROJECT_NAME} ${SOURCES_LIST})
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libraries)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/sources)
+add_subdirectory(libraries)
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts/include_database.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts/include_compiler_options.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts/include_output_options.cmake)
+
+#--------------------------------------------------------------------------------

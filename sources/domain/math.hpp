@@ -1,22 +1,21 @@
-#include "core.hpp"
+#ifndef DOM_MATH_HPP
+#define DOM_MATH_HPP
 
 //--------------------------------------------------------------------------------
 
-#include <iostream>
-
-#include "domain/error_message.hpp"
+#include <string>
 
 //--------------------------------------------------------------------------------
 
-eval::Core::Core(const std::string& aDatabasePath) noexcept
+namespace dom
 {
-    WRITE_LOG("Creating_core");
-}
+class Math
+{
+public:
+    static uint64_t getHash(const std::string& aStr) noexcept;
+};
+} // namespace dom
 
 //--------------------------------------------------------------------------------
 
-void
-eval::Core::run(int argc, char* argv[]) noexcept
-{
-    std::cout << "Boo!";
-}
+#endif // !DOM_MATH_HPP
