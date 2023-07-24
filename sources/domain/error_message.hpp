@@ -5,8 +5,9 @@
 
 #include <fstream>
 #include <iostream>
+#include <string>
 
-#include "string.hpp"
+#include "metaprogramming.hpp"
 
 //--------------------------------------------------------------------------------
 /*
@@ -34,28 +35,32 @@
 */
 //--------------------------------------------------------------------------------
 
+#define LOGS_OUTPUT_TYPE   1
+#define ERRORS_OUTPUT_TYPE 1
+// #define _DBG_
+
 #if LOGS_OUTPUT_TYPE == 0
-#define LOGS_DEFAULT_OUTPUT
+#    define LOGS_DEFAULT_OUTPUT
 #elif LOGS_OUTPUT_TYPE == 1
-#define LOGS_TO_COUT_OUTPUT
+#    define LOGS_TO_COUT_OUTPUT
 #elif LOGS_OUTPUT_TYPE == 2
-#define LOGS_TO_FILE_OUTPUT
+#    define LOGS_TO_FILE_OUTPUT
 #else
-#define LOG_DEFAULT_OUTPUT
+#    define LOG_DEFAULT_OUTPUT
 #endif
 
 //--------------------------------------------------------------------------------
 
 #if ERRORS_OUTPUT_TYPE == 0
-#define ERRORS_DEFAULT_OUTPUT
+#    define ERRORS_DEFAULT_OUTPUT
 #elif ERRORS_OUTPUT_TYPE == 1
-#define ERRORS_TO_COUT_OUTPUT
+#    define ERRORS_TO_COUT_OUTPUT
 #elif ERRORS_OUTPUT_TYPE == 2
-#define ERRORS_TO_FILE_OUTPUT
+#    define ERRORS_TO_FILE_OUTPUT
 #elif ERRORS_OUTPUT_TYPE == 4
-#define ERRORS_TO_LOG_OUTPUT
+#    define ERRORS_TO_LOG_OUTPUT
 #else
-#define ERROR_DEFAULT_OUTPUT
+#    define ERROR_DEFAULT_OUTPUT
 #endif
 
 //--------------------------------------------------------------------------------
@@ -67,24 +72,28 @@ class Message
 public:
     static Message globalMessages;
 
-    template <typename... Args> void startLogBlock(Args&&... args) noexcept
+    template <typename... Args>
+    void startLogBlock(Args&&... args) noexcept
     {
         write(mLogStream, std::forward<Args>(args)...);
         ++mLogBlockCount;
     }
 
-    template <typename... Args> void endLogBlock(Args&&... args) noexcept
+    template <typename... Args>
+    void endLogBlock(Args&&... args) noexcept
     {
         write(mLogStream, std::forward<Args>(args)...);
         --mLogBlockCount;
     }
 
-    template <typename... Args> void writeLog(Args&&... args) noexcept
+    template <typename... Args>
+    void writeLog(Args&&... args) noexcept
     {
         write(mLogStream, std::forward<Args>(args)...);
     }
 
-    template <typename... Args> void writeError(Args&&... args) noexcept
+    template <typename... Args>
+    void writeError(Args&&... args) noexcept
     {
 #ifdef ERRORS_TO_LOG_OUTPUT
         write(mErrorStream, "ERROR", std::forward<Args>(args)...);
@@ -159,19 +168,21 @@ ERROR FORMAT: <file or class name>, <function>,
 */
 
 #ifdef _DBG_
-#define START_LOG_BLOCK(...)                                                   \
-    dom::Message::globalMessages.startLogBlock(__VA_ARGS__)
-#define END_LOG_BLOCK(...) dom::Message::globalMessages.endLogBlock(__VA_ARGS__)
-#define WRITE_LOG(...) dom::Message::globalMessages.writeLog(__VA_ARGS__)
-#define WRITE_LOG_ENDL(...)                                                    \
-    dom::Message::globalMessages.writeLogEndl(__VA_ARGS__)
-#define WRITE_ERROR(...) dom::Message::globalMessages.writeError(__VA_ARGS__)
+#    define START_LOG_BLOCK(...) \
+        dom::Message::globalMessages.startLogBlock(__VA_ARGS__)
+#    define END_LOG_BLOCK(...) \
+        dom::Message::globalMessages.endLogBlock(__VA_ARGS__)
+#    define WRITE_LOG(...) dom::Message::globalMessages.writeLog(__VA_ARGS__)
+#    define WRITE_LOG_ENDL(...) \
+        dom::Message::globalMessages.writeLogEndl(__VA_ARGS__)
+#    define WRITE_ERROR(...) \
+        dom::Message::globalMessages.writeError(__VA_ARGS__)
 #else
-#define START_LOG_BLOCK(...) void(0)
-#define END_LOG_BLOCK(...) void(0)
-#define WRITE_LOG(...) void(0)
-#define WRITE_LOG_ENDL(...) void(0)
-#define WRITE_ERROR(...) void(0)
+#    define START_LOG_BLOCK(...) void(0)
+#    define END_LOG_BLOCK(...)   void(0)
+#    define WRITE_LOG(...)       void(0)
+#    define WRITE_LOG_ENDL(...)  void(0)
+#    define WRITE_ERROR(...)     void(0)
 #endif
 
 //--------------------------------------------------------------------------------

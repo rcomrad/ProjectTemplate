@@ -81,7 +81,7 @@ std::wstring
 dom::Cyrilic::toWString(const char* aStr) noexcept
 {
     std::wstring result;
-    auto str = const_cast<char*>(aStr);
+    auto str   = const_cast<char*>(aStr);
     uint8_t* s = (uint8_t*)str;
 
     for (uint8_t* c(s); *c != '\000'; ++c)
@@ -199,8 +199,7 @@ dom::Cyrilic::destroyWhiteSpaces(std::wstring& aStr, bool flag) noexcept
 void
 dom::Cyrilic::cutOffEnding(std::wstring& aStr) noexcept
 {
-    if (aStr.size() < 5)
-        return;
+    if (aStr.size() < 5) return;
 
     if (aStr == L"геометрическая")
     {
@@ -214,8 +213,7 @@ dom::Cyrilic::cutOffEnding(std::wstring& aStr) noexcept
     {
         destroyWord(aStr, i + L" ");
     }
-    if (aStr.back() == L' ')
-        aStr.pop_back();
+    if (aStr.back() == L' ') aStr.pop_back();
 }
 
 //--------------------------------------------------------------------------------
@@ -299,5 +297,43 @@ dom::Cyrilic::toUpperCyrillic(const char* aCharacter) noexcept
 
     return res;
 }
-
+#include <locale>
 //--------------------------------------------------------------------------------
+std::string
+dom::Cyrilic::translit(std::string& s)
+{
+    std::string rus[74] = {
+        "А", "а", "Б", "б", "В", "в", "Г", "г", "Ґ", "ґ", "Д", "д", "Е",
+        "е", "Є", "є", "Ж", "ж", "З", "з", "И", "и", "І", "і", "Ї", "ї",
+        "Й", "й", "К", "к", "Л", "л", "М", "м", "Н", "н", "О", "о", "П",
+        "п", "Р", "р", "С", "с", "Т", "т", "У", "у", "Ф", "ф", "Х", "х",
+        "Ц", "ц", "Ч", "ч", "Ш", "ш", "Щ", "щ", "Ь", "ь", "Ю", "ю", "Я",
+        "я", "Ы", "ы", "Ъ", "ъ", "Ё", "ё", "Э", "э"};
+    std::string eng[74] = {
+        "A",  "a",  "B",  "b",   "V",   "v",  "G",  "g",  "G",  "g",  "D",
+        "d",  "E",  "e",  "E",   "E",   "Zh", "zh", "Z",  "z",  "I",  "i",
+        "I",  "I",  "Yi", "yi",  "J",   "j",  "K",  "k",  "L",  "l",  "M",
+        "m",  "N",  "n",  "O",   "o",   "P",  "p",  "R",  "r",  "S",  "s",
+        "T",  "t",  "U",  "u",   "F",   "f",  "H",  "h",  "Ts", "ts", "ch",
+        "ch", "Sh", "sh", "Shh", "shh", "'",  "'",  "Yu", "yu", "Ya", "ya",
+        "Y",  "y",  "",   "",    "Yo",  "yo", "E",  "e"};
+
+    bool find = false;
+    std::string res;
+    for (int i = 0; i <= s.size(); i++)
+    {
+        find = false;
+        for (int j = 0; j < 74; j++)
+        {
+            if (s.substr(i, 2).compare(rus[j]) == 0)
+            {
+                res += eng[j];
+                find = true;
+                i++;
+                break;
+            }
+        }
+        if (!find) res += s.substr(i, 1);
+    }
+    return res;
+}

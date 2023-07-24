@@ -4,13 +4,6 @@
 
 #include <iostream>
 
-#include "path.hpp"
-
-//--------------------------------------------------------------------------------
-
-// The main/path.hpp file overrides the log and error paths for this project.
-#include "main/path.hpp"
-
 //--------------------------------------------------------------------------------
 
 dom::Message dom::Message::globalMessages;
@@ -24,10 +17,10 @@ dom::Message::Message() noexcept
 #if defined(LOGS_DEFAULT_OUTPUT)
     mLogStream = &std::cout;
 #elif defined(LOGS_TO_COUT_OUTPUT)
-    mLogStream = &std::cout;
+    mLogStream   = &std::cout;
 #elif defined(LOGS_TO_FILE_OUTPUT)
-    auto sss = LOGS_PATH + "out.log";
-    mLogStream = new std::ofstream(LOGS_PATH + "out.log");
+    // auto sss     = LOGS_PATH + "out.log";
+    // mLogStream   = new std::ofstream(LOGS_PATH + "out.log");
 #endif
 
 #if defined(ERRORS_DEFAULT_OUTPUT)
@@ -35,7 +28,7 @@ dom::Message::Message() noexcept
 #elif defined(ERRORS_TO_COUT_OUTPUT)
     mErrorStream = &std::cout;
 #elif defined(ERRORS_TO_FILE_OUTPUT)
-    mErrorStream = new std::ofstream(ERRORS_PATH + "out.err");
+    // mErrorStream = new std::ofstream(ERRORS_PATH + "out.err");
 #elif defined(ERRORS_TO_LOG_OUTPUT)
     mErrorStream = mLogStream;
 #endif
@@ -52,7 +45,7 @@ dom::Message::writeLogEndl() noexcept
 //--------------------------------------------------------------------------------
 
 #ifdef BILL_WINDOWS
-#include <windows.h>
+#    include <windows.h>
 #endif
 
 //--------------------------------------------------------------------------------

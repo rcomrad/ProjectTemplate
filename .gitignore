@@ -1,5 +1,5 @@
 /build
-
+/.vscode
 
 **.pdb
 **.obj
@@ -7,10 +7,10 @@
 **.log
 **.err
 **.exe
+**.dll
+**.pass
+**.path
+**.dmprar
+**.out
 
-/libraries/*/*.h
-/libraries/*/*.c
-/libraries/*/*.hpp
-/libraries/*/*.cpp
-
-!/libraries/CPUTime/getCPUTime.hpp
+git update-index --assume-unchanged ./.vscode/*

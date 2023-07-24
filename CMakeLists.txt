@@ -1,39 +1,57 @@
 #--------------------------------------------------------------------------------
 
 cmake_minimum_required(VERSION 3.21.3)
-project(KusManager VERSION 1.2)
+
+if(NOT DEFINED VCPKG_ROOT)
+    set(VCPKG_ROOT "D:/vcpkg")
+endif()
+
+set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+
+project(ProjectTemplate)
 
 #--------------------------------------------------------------------------------
 
+# OS detection
+if (${MSVC})
+    set(OS "BILL_WINDOWS")
+else()
+    set(OS "LINUS_LINUX")
+endif()
+message(-----> ${OS})
+
+#--------------------------------------------------------------------------------
+
+# Compile options
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Compile options
-if (MSVC_VERSION GREATER_EQUAL "1900")
-    set(OS BILL_WINDOWS)
-    add_compile_options("/std:c++latest")
-else()
-    set(OS LINUS_LINUX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wl,--no-as-needed -ldl")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG")
-endif()
+# Libraries include
+# find_package(Boost 1.64.0 REQUIRED system filesystem)
 
-#  Code include
+# Include cmake scripts
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts/cmake_scripts.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/libraries/libraries.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/sources/sources.cmake)
 
-get_libraries(SOURCES_LIST ${CMAKE_CURRENT_SOURCE_DIR})
+# Sources include
 get_sources(SOURCES_LIST ${CMAKE_CURRENT_SOURCE_DIR})
-
 add_executable(${PROJECT_NAME} ${SOURCES_LIST})
-
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libraries)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/sources)
-add_subdirectory(libraries)
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts/include_database.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts/include_compiler_options.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts/include_output_options.cmake)
+#  Compiler defenitions
+if    (${OS} MATCHES "LINUS_LINUX")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE LINUS_LINUX)
+elseif(${OS} MATCHES "BILL_WINDOWS")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE BILL_WINDOWS _WIN32_WINNT=0x0601)
+endif()
+
+# Libraries include
+# target_link_libraries (${PROJECT_NAME} PRIVATE ${Boost_LIBRARIES})
+
+# Output file name settings
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
+set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin/$<0:>)
+set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
+set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX .exe)
 
 #--------------------------------------------------------------------------------

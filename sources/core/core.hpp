@@ -1,32 +1,22 @@
 #ifndef CORE_HPP
 #define CORE_HPP
 
-//--------------------------------------------------------------------------------
-
-#include <string>
-
-//--------------------------------------------------------------------------------
-
-namespace eval
+namespace core
 {
 class Core
 {
 public:
-    Core(const std::string& aDatabasePath) noexcept;
+    Core() noexcept;
     ~Core() = default;
 
-    Core(const Core& other) noexcept = default;
-    Core& operator=(const Core& other) noexcept = default;
+    Core(const Core& other) noexcept            = delete;
+    Core& operator=(const Core& other) noexcept = delete;
 
-    Core(Core&& other) noexcept = default;
-    Core& operator=(Core&& other) noexcept = default;
+    Core(Core&& other) noexcept            = delete;
+    Core& operator=(Core&& other) noexcept = delete;
 
-    void run(int argc, char* argv[]) noexcept;
-
-private:
+    void run() noexcept;
 };
-} // namespace eval
-
-//--------------------------------------------------------------------------------
+} // namespace core
 
 #endif // !CORE_HPP
