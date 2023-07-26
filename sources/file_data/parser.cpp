@@ -1,5 +1,7 @@
 #include "parser.hpp"
 
+#include <iostream>
+
 #include "file.hpp"
 
 std::optional<file::Variable>
@@ -24,6 +26,31 @@ file::Parser::makeVariable(const std::string& aStr) noexcept
         temp.value.str = aStr.substr(num + 2, aStr.size());
         normalize(temp.name, Type::Lower);
         result = std::move(temp);
+    }
+
+    return result;
+}
+
+std::vector<file::Variable>
+file::Parser::getVariablesFromFile(const std::string aFilename,
+                                   bool aIsCritical) noexcept
+{
+    std::vector<Variable> result;
+
+    auto lines = file::File::getLines(aFilename, aIsCritical);
+    for (auto& str : lines)
+    {
+        auto temp = file::Parser::makeVariable(str);
+        if (temp.has_value())
+        {
+            result.emplace_back(std::move(temp.value()));
+        }
+        else
+        {
+            std::cout << "ERROR: '" << str  << "' from " << aFilename
+                      << " isn't variable!" << std::endl;
+            continue;
+        }
     }
 
     return result;

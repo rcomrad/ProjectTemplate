@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "file.hpp"
+#include "parser.hpp"
 #include "variable_storage.hpp"
 
 //--------------------------------------------------------------------------------
@@ -32,6 +33,11 @@ file::Path::getInstance() noexcept
 void
 file::Path::reset() noexcept
 {
+    setPath("exe", getExecutablePath());
+    setPath("main", calculateMainPath(mPaths["exe"]));
+    // TODO: add all folders from project?
+    setPath("config", mPaths["main"] + "config/");
+
     auto& var     = file::VariableStorage::getInstance();
     auto def_path = var.getWord("default_path");
     if (def_path.has_value())
@@ -39,21 +45,24 @@ file::Path::reset() noexcept
         setDefault(def_path.value());
     }
 
-    auto temp = File::getWords("path.conf");
-    for (auto& i : temp)
+    auto pathFile = getPath("config").value() + "path.conf";
+    auto paths    = file::Parser::getVariablesFromFile(pathFile);
+    for (auto& var : paths)
     {
-        mPaths[i[0]] = i[1];
+        if (var.value.getType() != file::Value::Type::String)
+        {
+            std::cout << "ERROR: " << var.name << " from " << pathFile
+                      << " isn't path!" << std::endl;
+            continue;
+        }
+
+        mPaths[var.name] = var.value;
     }
 
     if (mPaths.empty())
     {
         std::cout << "ERROR: no paths file detected!\n";
     }
-
-    setPath("exe", getExecutablePath());
-    setPath("main", calculateMainPath(mPaths["exe"]));
-    // TODO: add all folders from project?
-    setPath("config", mPaths["main"] + "config/");
 }
 
 //--------------------------------------------------------------------------------

@@ -19,6 +19,8 @@ public:
 
     static std::optional<Variable> makeVariable(
         const std::string& aStr) noexcept;
+    static std::vector<Variable> getVariablesFromFile(
+        const std::string aFilename, bool aIsCritical = false) noexcept;
 
     static std::vector<std::string> slice(const std::string& aStr,
                                           char delimiter) noexcept;

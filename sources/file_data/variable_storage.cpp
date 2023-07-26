@@ -23,27 +23,21 @@ file::VariableStorage::getInstance() noexcept
 void
 file::VariableStorage::reloadSettings() noexcept
 {
-    auto settings = file::File::getLines(
+    auto settings = file::Parser::getVariablesFromFile(
         file::Path::generateConfigFolderPath() + "main_settings.conf", true);
-    for (auto& str : settings)
+    for (auto& var : settings)
     {
-        auto temp = file::Parser::makeVariable(str);
-        if (temp.has_value())
+        switch (var.value.getType())
         {
-            auto var = temp.value();
-
-            switch (var.value.getType())
-            {
-                case file::Value::Type::Int:
-                    mInts[var.name] = var.value;
-                    break;
-                case file::Value::Type::Bool:
-                    mFlags[var.name] = var.value;
-                    break;
-                case file::Value::Type::String:
-                    mWords[var.name] = var.value;
-                    break;
-            }
+            case file::Value::Type::Int:
+                mInts[var.name] = var.value;
+                break;
+            case file::Value::Type::Bool:
+                mFlags[var.name] = var.value;
+                break;
+            case file::Value::Type::String:
+                mWords[var.name] = var.value;
+                break;
         }
     }
 }
