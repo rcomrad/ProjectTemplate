@@ -1,19 +1,15 @@
 #ifndef CORE_HPP
 #define CORE_HPP
 
+#include "domain/holy_trinity.hpp"
+
 namespace core
 {
 class Core
 {
 public:
     Core() noexcept;
-    ~Core() = default;
-
-    Core(const Core& other) noexcept            = delete;
-    Core& operator=(const Core& other) noexcept = delete;
-
-    Core(Core&& other) noexcept            = delete;
-    Core& operator=(Core&& other) noexcept = delete;
+    HOLY_TRINITY_SINGLE(Core);
 
     void run() noexcept;
 };

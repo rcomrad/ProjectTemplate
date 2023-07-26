@@ -10,5 +10,9 @@ set(
     error_message.cpp
     error_message.hpp 
 
+    holy_trinity.hpp
+
     metaprogramming.hpp
+
+    pair.hpp
 )

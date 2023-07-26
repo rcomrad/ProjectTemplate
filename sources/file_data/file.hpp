@@ -4,10 +4,9 @@
 //--------------------------------------------------------------------------------
 
 #include <array>
+#include <functional>
 #include <string>
 #include <vector>
-
-#include "database/raw_data.hpp"
 
 //--------------------------------------------------------------------------------
 
@@ -16,15 +15,8 @@ namespace file
 
 class File
 {
-private:
-    static bool isSeparator(char c) noexcept;
-    static bool isDMPSeparator(char c) noexcept;
-    static bool isCSVSeparator(char c) noexcept;
-
 public:
-    static data::RawDataArray dmpParser(const std::string& aFileName) noexcept;
-    static data::RawDataArray dataParser(const std::string& aFileName) noexcept;
-    static data::RawDataArray csvParser(const std::string& aFileName) noexcept;
+    File() noexcept = delete;
 
     static std::string getAllData(const std::string& aFileName,
                                   bool aIsCritical = false) noexcept;
@@ -32,16 +24,15 @@ public:
                                              bool aIsCritical = false) noexcept;
     static std::vector<std::vector<std::string>> getWords(
         const std::string& aFileName,
-        bool aIsCritical = false,
-        decltype(&file::File::isSeparator) funk =
-            &file::File::isSeparator) noexcept;
-
-    static std::vector<std::array<std::string, 2>> getMap(
-        const std::string& aFileName, bool aIsCritical = false) noexcept;
+        bool aIsCritical               = false,
+        std::function<bool(char)> funk = &file::File::isSeparator) noexcept;
 
     static std::string writeData(const std::string& aFolderName,
                                  const std::string& aFileName,
                                  const std::string& aData) noexcept;
+
+private:
+    static bool isSeparator(char c) noexcept;
 };
 
 } // namespace file

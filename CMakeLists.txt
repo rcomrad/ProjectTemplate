@@ -27,7 +27,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Libraries include
-# find_package(Boost 1.64.0 REQUIRED system filesystem)
+find_package(Boost REQUIRED)
+INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 
 # Include cmake scripts
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts/cmake_scripts.cmake)
@@ -46,7 +47,7 @@ elseif(${OS} MATCHES "BILL_WINDOWS")
 endif()
 
 # Libraries include
-# target_link_libraries (${PROJECT_NAME} PRIVATE ${Boost_LIBRARIES})
+target_link_libraries (${PROJECT_NAME} PRIVATE ${Boost_LIBRARIES})
 
 # Output file name settings
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
