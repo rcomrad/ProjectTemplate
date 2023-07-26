@@ -51,7 +51,7 @@ file::Path::reset() noexcept
     {
         if (var.value.getType() != file::Value::Type::String)
         {
-            std::cout << "ERROR: " << var.name << " from " << pathFile
+            std::cout << "ERROR: '" << var.name << "' from " << pathFile
                       << " isn't path!" << std::endl;
             continue;
         }
