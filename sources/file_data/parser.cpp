@@ -1,6 +1,6 @@
 #include "parser.hpp"
 
-#include <iostream>
+#include "domain/log.hpp"
 
 #include "file.hpp"
 
@@ -47,8 +47,8 @@ file::Parser::getVariablesFromFile(const std::string aFilename,
         }
         else
         {
-            std::cout << "ERROR: '" << str  << "' from " << aFilename
-                      << " isn't variable!" << std::endl;
+            dom::writeError("Line '", str, "' from ", aFilename,
+                            " doesn't contain variable");
             continue;
         }
     }

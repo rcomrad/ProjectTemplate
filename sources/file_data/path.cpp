@@ -1,7 +1,8 @@
 #include "path.hpp"
 
 #include <filesystem>
-#include <iostream>
+
+#include "domain/log.hpp"
 
 #include "file.hpp"
 #include "parser.hpp"
@@ -51,8 +52,7 @@ file::Path::reset() noexcept
     {
         if (var.value.getType() != file::Value::Type::String)
         {
-            std::cout << "ERROR: '" << var.name << "' from " << pathFile
-                      << " isn't path!" << std::endl;
+            dom::writeError("'", var.name, "' from ", pathFile, " isn't path");
             continue;
         }
 
@@ -61,7 +61,7 @@ file::Path::reset() noexcept
 
     if (mPaths.empty())
     {
-        std::cout << "ERROR: no paths file detected!\n";
+        dom::writeError("No paths file detected");
     }
 }
 
@@ -158,7 +158,7 @@ file::Path::getExecutablePath() noexcept
 #elif defined(LINUS_LINUX)
     char buf[PATH_MAX + 1];
     if (readlink("/proc/self/exe", buf, sizeof(buf) - 1) == -1)
-        WRITE_ERROR("readlink() failed");
+        dom::writeError("readlink() failed");
     std::string str(buf);
     int i = str.size() - 1;
     for (int j = 0; j < 1; --i)
